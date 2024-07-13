@@ -19,21 +19,22 @@ const EmailForm = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/send-email', {
+      console.log('Sending request with data:', formData);
+      const response = await fetch('https://teesst.netlify.app/send-email', { // Replace with actual URL
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
 
-      const result = await response.json();
-      if (response.ok) {
-        setResponseMessage(result.message);
-      } else {
-        setResponseMessage(result.message + ': ' + result.error);
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      const result = await response.json();
+      setResponseMessage(result.message);
+      console.log('Response received:', result);
     } catch (error) {
       console.error('Error:', error);
-      setResponseMessage('An error occurred: ' + error.message);
+      setResponseMessage('Failed to send email. Please try again later.');
     }
   };
 
