@@ -19,7 +19,7 @@ const EmailForm = () => {
     e.preventDefault();
   
     try {
-      const response = await fetch('http://localhost:5000/send-email', {
+      const response = await fetch('https://my-app-0xa3.onrender.com/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
