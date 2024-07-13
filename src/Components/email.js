@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+
 const EmailForm = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -16,25 +17,26 @@ const EmailForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch('https://teessst.netlify.app/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-
-      const result = await response.json();
-      if (response.ok) {
-        setResponseMessage(result.message);
-      } else {
-        setResponseMessage(result.message + ': ' + result.error);
+  
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
       }
+  
+      const result = await response.json();
+      setResponseMessage(result.message);
     } catch (error) {
       console.error('Error:', error);
-      setResponseMessage('An error occurred: ' + error.message);
+      setResponseMessage('Failed to send email. Please try again later.');
     }
   };
+  
 
   return (
     <div>
