@@ -17,26 +17,36 @@ const EmailForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await fetch('http://localhost:5000/send-email', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(formData)
       });
-
-      const result = await response.json();
-      if (response.ok) {
-        setResponseMessage(result.message);
-      } else {
-        setResponseMessage(result.message + ': ' + result.error);
+  
+      if (!response.ok) {
+        const errorMessage = await response.text();
+        throw new Error(errorMessage);
       }
+  
+      const result = await response.json();
+      setResponseMessage(result.message);
+      setFormData({
+        name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
     } catch (error) {
       console.error('Error:', error);
       setResponseMessage('An error occurred: ' + error.message);
     }
   };
-
+  
   return (
     <div>
       <form onSubmit={handleSubmit}>
