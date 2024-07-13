@@ -1,19 +1,14 @@
 const express = require('express');
-const cors = require('cors');
-const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
-
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const path=require('path');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({
-  origin: 'https://teesst.netlify.app', // Allow requests from your Netlify site
-  methods: ['GET', 'POST'], // Allow GET and POST requests
-  allowedHeaders: ['Content-Type'], // Allow the Content-Type header
-}));
-
+app.use(cors());
 app.use(bodyParser.json());
-
+app.use(express.static(path.resolve(__dirname,'../build')));
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
@@ -42,14 +37,16 @@ app.post('/send-email', (req, res) => {
       return res.status(500).json({
         success: false,
         message: 'Failed to send email. Detailed error logged on the server.',
-        error: error.message
+        error: error.message // Provide the error message for better debugging
       });
     }
     console.log('Email sent:', info.response);
     res.status(200).json({ success: true, message: 'Email sent successfully.' });
   });
 });
-
+app.get('*',(req,res)=>{
+    res.sendFile(path.resolve(__dirname,'../build','index.html'));
+})
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
