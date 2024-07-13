@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({
-  origin: 'https://teessst.netlify.app', // Allow requests from your Netlify site
+  origin: 'https://teesst.netlify.app', // Allow requests from your Netlify site
   methods: ['GET', 'POST'], // Allow GET and POST requests
   allowedHeaders: ['Content-Type'], // Allow the Content-Type header
 }));
