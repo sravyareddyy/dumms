@@ -17,25 +17,25 @@ const EmailForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
-      const response = await fetch('https://teessst.netlify.app/send-email', {
+      const response = await fetch('http://localhost:5000/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       });
-  
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+
       const result = await response.json();
-      setResponseMessage(result.message);
+      if (response.ok) {
+        setResponseMessage(result.message);
+      } else {
+        setResponseMessage(result.message + ': ' + result.error);
+      }
     } catch (error) {
       console.error('Error:', error);
-      setResponseMessage('Failed to send email. Please try again later.');
+      setResponseMessage('An error occurred: ' + error.message);
     }
   };
-  
 
   return (
     <div>
